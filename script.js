@@ -68,10 +68,12 @@
   const finePointer = window.matchMedia('(pointer: fine)').matches;
 
   /* ---- passive scroll parallax ----
-     Reads scrollY to drift the hero contour line and background grid
-     at a different rate than content. Read-only — never calls
-     preventDefault, so it can't fight native/trackpad scroll the way
-     the earlier wheel-hijack did. */
+     Reads scrollY to drift the hero contour line at a different rate
+     than content. Read-only — never calls preventDefault, so it can't
+     fight native/trackpad scroll the way the earlier wheel-hijack did.
+     The background grid used to drift here too, but scrolling at a
+     different rate than the content it sits behind read as a mismatch
+     rather than depth, so it now scrolls 1:1 with the page. */
   if (!reduceMotion) {
     const contour = document.querySelector('.contour-line');
     let ticking = false;
@@ -81,7 +83,6 @@
       requestAnimationFrame(() => {
         const y = window.scrollY;
         if (contour) contour.style.transform = `translateY(${y * 0.12}px)`;
-        document.body.style.backgroundPosition = `center ${-(y * 0.35)}px`;
         ticking = false;
       });
     };
