@@ -65,54 +65,7 @@
     });
   });
 
-  /* ---- surveyor's-reticle cursor ----
-     A crosshair that trails the pointer and snaps onto interactive
-     targets, in place of Artis Causa's generic circle cursor — this
-     one nods to survey/lift-planning equipment instead. Fine-pointer
-     devices only; skipped entirely under reduced motion. */
   const finePointer = window.matchMedia('(pointer: fine)').matches;
-  if (finePointer && !reduceMotion) {
-    const reticle = document.createElement('div');
-    reticle.className = 'reticle';
-    reticle.setAttribute('aria-hidden', 'true');
-    reticle.innerHTML =
-      '<svg viewBox="0 0 26 26">' +
-      '<circle cx="13" cy="13" r="9" fill="none" stroke-width="1.4"/>' +
-      '<line x1="13" y1="0" x2="13" y2="6" stroke-width="1.4"/>' +
-      '<line x1="13" y1="20" x2="13" y2="26" stroke-width="1.4"/>' +
-      '<line x1="0" y1="13" x2="6" y2="13" stroke-width="1.4"/>' +
-      '<line x1="20" y1="13" x2="26" y2="13" stroke-width="1.4"/>' +
-      '</svg>';
-    document.body.appendChild(reticle);
-    document.body.classList.add('has-reticle');
-
-    let rx = window.innerWidth / 2;
-    let ry = window.innerHeight / 2;
-    let tx = rx;
-    let ty = ry;
-
-    window.addEventListener('pointermove', (e) => {
-      tx = e.clientX;
-      ty = e.clientY;
-      reticle.classList.add('is-active');
-    });
-    document.addEventListener('pointerleave', () => reticle.classList.remove('is-active'));
-
-    const hoverTargets = 'a, button, .service-card, .marquee-track span';
-    document.addEventListener('pointerover', (e) => {
-      if (e.target.closest(hoverTargets)) reticle.classList.add('is-hovering');
-    });
-    document.addEventListener('pointerout', (e) => {
-      if (e.target.closest(hoverTargets)) reticle.classList.remove('is-hovering');
-    });
-
-    (function follow() {
-      rx += (tx - rx) * 0.22;
-      ry += (ty - ry) * 0.22;
-      reticle.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(follow);
-    })();
-  }
 
   /* ---- passive scroll parallax ----
      Reads scrollY to drift the hero contour line and background grid
